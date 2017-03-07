@@ -1,0 +1,67 @@
+{
+    "manifestVersion": 1,
+    "id": "auto-config-tool",
+    "BaseUri": "http://localhost:8520/",
+    "version": "0.1.0",
+    "name": "Auto Config Tool",
+    "scopes": [
+        "vso.work",
+        "vso.work_write",
+        "vso.code",
+        "vso.code_write"
+    ],
+    "description": "Create a tool the automate the vso config process",
+    "publisher": "blueprint",
+    "public": false,
+    "icons": {
+        "default": "img/logo.png"
+    },
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+    "files": [
+        {
+            "path": "css",
+            "addressable": true
+        },
+        {
+            "path": "img",
+            "addressable": true
+        },
+        {
+            "path": "fonts",
+            "addressable": true
+        },
+        {
+            "path": "dist",
+            "addressable": true
+        },
+        {
+            "path": "scripts",
+            "addressable": true
+        },
+        {
+            "path": "index.html",
+            "addressable": true
+        }
+    ],
+    "categories": [
+        "Integrate"
+    ],
+    "contributions": [
+        {
+            "id": "auto-config-tool",
+            "type": "ms.vss-web.hub",
+            "description": "",
+            "targets": [
+                "ms.vss-work-web.work-hub-group"
+            ],
+            "properties": {
+                "name": "Auto Config Tool",
+                "uri": "index.html"
+            }
+        }
+    ]
+}

@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "module": "amd",
+        "sourceMap": false,
+        "jsx": "react"
+    },
+    "filesGlob": [
+        "./scripts/**/*.ts",
+        "./typings/index.d.ts"
+    ],
+    "files": [
+        "scripts/dataProvider.ts",
+        "scripts/contracts.ts",
+        "scripts/secret.ts",
+        "typings/index.d.ts"
+    ]
+}

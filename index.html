@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <script src="dist/VSS.SDK.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/home-page.css">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+</head>
+<body>
+    <script type="text/javascript">
+        // Initialize framework 
+        VSS.init({
+            explicitNotifyLoaded: true,
+            usePlatformScripts: true,
+            configureModuleLoader: true
+        });
+
+        // Load main entry point for extension
+        VSS.require(["scripts/main", "scripts/dataProvider"], function () {
+            // Loading succeeded
+            VSS.notifyLoadSucceeded();
+        });
+    </script>
+    <div id="main-container"></div>
+</body>
+</html>
