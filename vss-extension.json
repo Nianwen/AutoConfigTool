@@ -31,14 +31,6 @@
             "addressable": true
         },
         {
-            "path": "fonts",
-            "addressable": true
-        },
-        {
-            "path": "dist",
-            "addressable": true
-        },
-        {
             "path": "scripts",
             "addressable": true
         },
@@ -52,7 +44,7 @@
     ],
     "contributions": [
         {
-            "id": "auto-config-tool",
+            "id": "auto-config-tool-hub",
             "type": "ms.vss-web.hub",
             "description": "",
             "targets": [

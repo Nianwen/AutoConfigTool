@@ -16,12 +16,12 @@
                 stderr: true
             },
             publish: {
-                command: "tfx extension publish --service-url http://marketplace.visualstudio.com --manifest-globs vss-extension.json",
+                command: "tfx extension publish --manifest-globs vss-extension.json",
                 stdout: true,
                 stderr: true
             },
             publishDev: {
-                command: "tfx extension publish --service-url http://localhost:8080/tfs --manifest-globs vss-extension.json",
+                command: "tfx extension publish --manifest-globs vss-extension.json --service-url http://localhost:8080/tfs",
                 stdout: true,
                 stderr: true
             }
@@ -35,27 +35,8 @@
                     dest: "dist",
                     filter: "isFile"
                 }]
-            },
-            css: {
-                files: [{
-                    expand: true,
-                    flatten: true,
-                    src: ["node_modules/font-awesome/css/font-awesome.min.css"],
-                    dest: "css",
-                    filter: "isFile"
-                }]
-            },
-            fonts: {
-                files: [{
-                    expand: true,
-                    flatten: true,
-                    src: ["node_modules/font-awesome/fonts/fontawesome-webfont.woff", "node_modules/font-awesome/fonts/fontawesome-webfont.eot"],
-                    dest: "fonts",
-                    filter: "isFile"
-                }]
             }
         },
-
         watch: {
             scripts: {
                 files: ["scripts/**/*.ts", "scripts/**/*.tsx", "index.html", "css/*.css"],
@@ -74,7 +55,7 @@
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-watch");
 
-    grunt.registerTask("build", ["ts:build", "copy:scripts", "copy:css", "copy:fonts"]);
+    grunt.registerTask("build", ["ts:build", "copy:scripts"]);
     grunt.registerTask("package", ["build", "exec:package"]);
     grunt.registerTask("publish", ["package", "exec:publishDev"]);
 
