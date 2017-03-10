@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "auto-config-tool",
-    "version": "0.2.3",
+    "version": "0.2.5",
     "name": "Auto Config Tool",
     "scopes": [
         "vso.work",
@@ -26,15 +26,15 @@
             "addressable": true
         },
         {
+            "path": "scripts",
+            "addressable": true
+        },
+        {
             "path": "img",
             "addressable": true
         },
         {
             "path": "dist",
-            "addressable": true
-        },
-        {
-            "path": "scripts",
             "addressable": true
         },
         {

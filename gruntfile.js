@@ -37,15 +37,6 @@
                 }]
             }
         },
-        watch: {
-            scripts: {
-                files: ["scripts/**/*.ts", "scripts/**/*.tsx", "index.html", "css/*.css"],
-                tasks: ["publish"],
-                options: {
-                    spawn: false,
-                },
-            },
-        },
         clean: ["scripts/**/*.js", "*.vsix", "dist"]
     });
 
@@ -53,7 +44,6 @@
     grunt.loadNpmTasks("grunt-exec");
     grunt.loadNpmTasks("grunt-contrib-copy");
     grunt.loadNpmTasks("grunt-contrib-clean");
-    grunt.loadNpmTasks("grunt-contrib-watch");
 
     grunt.registerTask("build", ["ts:build", "copy:scripts"]);
     grunt.registerTask("package", ["build", "exec:package"]);

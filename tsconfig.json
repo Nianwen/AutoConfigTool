@@ -4,6 +4,14 @@
         "sourceMap": false,
         "jsx": "react"
     },
+    "filesGlob": [
+        "./scripts/**/*.ts",
+        "./scripts/**/*.tsx"
+    ],
+    "files": [
+        "scripts/dataProvider.ts",
+        "scripts/main.tsx"
+    ],
     "exclude": [
         "node_modules"
     ]
