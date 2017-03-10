@@ -10,7 +10,7 @@
         "./typings/tsd.d.ts"
     ],
     "files": [
-        "scripts/dataProvider.ts",
+        "scripts/dataService.ts",
         "scripts/main.tsx",
         "typings/tsd.d.ts"
     ]

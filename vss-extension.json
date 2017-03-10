@@ -1,11 +1,9 @@
 {
     "manifestVersion": 1,
     "id": "auto-config-tool",
-    "version": "0.2.7",
+    "version": "0.2.16",
     "name": "Auto Config Tool",
     "scopes": [
-        "vso.work",
-        "vso.work_write",
         "vso.code",
         "vso.code_write"
     ],
