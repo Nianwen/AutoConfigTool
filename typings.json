@@ -1,7 +1,13 @@
 {
   "globalDependencies": {
-    "node": "registry:dt/node#7.0.0+20170308233040",
     "require": "registry:dt/require#2.1.20+20160919185614",
-    "requirejs": "registry:env/requirejs#2.2.0+20160319062041"
+    "requirejs": "registry:env/requirejs#2.2.0+20160319062041",
+    "jquery": "registry:dt/jquery#1.10.0+20160316155526",
+    "knockout": "registry:dt/knockout#0.0.0+20160409112158",
+    "q": "registry:dt/q#0.0.0+20160323171452",
+    "react": "registry:dt/react#0.14.0+20160602151522",
+    "react-dom": "registry:dt/react-dom#0.14.0+20160412154040",
+    "tfs": "npm:vss-web-extension-sdk/typings/tfs.d.ts",
+    "vss": "npm:vss-web-extension-sdk/typings/vss.d.ts"
   }
 }

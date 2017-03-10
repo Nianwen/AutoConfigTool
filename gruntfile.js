@@ -15,13 +15,13 @@
                 stdout: true,
                 stderr: true
             },
-            publish: {
-                command: "tfx extension publish --manifest-globs vss-extension.json",
+            publishDev: {
+                command: "tfx extension publish --service-url http://localhost:8080/tfs --manifest-globs vss-extension.json",
                 stdout: true,
                 stderr: true
             },
-            publishDev: {
-                command: "tfx extension publish --manifest-globs vss-extension.json --service-url http://localhost:8080/tfs",
+            publish: {
+                command: "tfx extension publish --service-url http://marketplace.visualstudio.com --manifest-globs vss-extension.json",
                 stdout: true,
                 stderr: true
             }

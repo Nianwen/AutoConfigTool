@@ -1,8 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "auto-config-tool",
-    "BaseUri": "http://localhost:8520/",
-    "version": "0.1.0",
+    "version": "0.2.3",
     "name": "Auto Config Tool",
     "scopes": [
         "vso.work",
@@ -31,6 +30,10 @@
             "addressable": true
         },
         {
+            "path": "dist",
+            "addressable": true
+        },
+        {
             "path": "scripts",
             "addressable": true
         },
@@ -44,7 +47,7 @@
     ],
     "contributions": [
         {
-            "id": "auto-config-tool-hub",
+            "id": "auto-config-tool",
             "type": "ms.vss-web.hub",
             "description": "",
             "targets": [
