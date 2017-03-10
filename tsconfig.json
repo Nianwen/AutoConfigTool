@@ -6,13 +6,12 @@
     },
     "filesGlob": [
         "./scripts/**/*.ts",
-        "./scripts/**/*.tsx"
+        "./scripts/**/*.tsx",
+        "./typings/tsd.d.ts"
     ],
     "files": [
         "scripts/dataProvider.ts",
-        "scripts/main.tsx"
-    ],
-    "exclude": [
-        "node_modules"
+        "scripts/main.tsx",
+        "typings/tsd.d.ts"
     ]
 }
