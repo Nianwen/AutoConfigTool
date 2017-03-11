@@ -105,7 +105,7 @@ export class MultilineTextBox extends React.Component<ITextBoxComponentProps, IT
                 this.props.onChange(event.target.value);
             };
             var invalidClassName = this.props.isValid ? "" : TextBox.INVALID_CLASS;
-            return <textarea style={{ resize: "none" }} value={this.props.value} onChange={onChange} className={invalidClassName} placeholder={this.props.placeholderText} />
+            return <textarea value={this.props.value} onChange={onChange} className={invalidClassName} placeholder={this.props.placeholderText} />
         }
     }
 } 
@@ -134,23 +134,37 @@ export interface AutoConfigToolState {
     name: string;
     scaleUnit: string;
     service: string;
-    milestore: string;
+    milestone: string;
     operation: string;
     content: string;
+    contentCustomized?: boolean;
+}
+
+export enum OperationType {
+    TurnFeatureFlagOn,
+    TurnFeatureFlagOff,
+    RunSQLScript
 }
 
 export class AutoConfigTool extends React.Component<void, AutoConfigToolState> {
+    private _dataService: DataService;
+
     constructor() {
         super();
-        this.state = { name:"", scaleUnit: "", service: "", milestore:"", operation:"", content: ""};
+        this._dataService = new DataService();
+        this.state = { name:"", scaleUnit: "", service: "", milestone:"", operation: OperationType[OperationType.TurnFeatureFlagOn], content: ""};
     }
     public render(): JSX.Element {
         return <div>
             <TextBox id="name" label="Name" value={this.state.name} onChange={this._onNameChange}/>
             <TextBox id="scaleUnit" label="ScaleUnit" value={this.state.scaleUnit} onChange={this._onScaleUnitChange}/>
             <TextBox id="service" label="Service" value={this.state.service} onChange={this._onServiceChange}/>
-            <TextBox id="milestore" label="Milestore" value={this.state.milestore} onChange={this._onMilestoneChange}/>
-            <TextBox id="operation" label="Operation" value={this.state.operation} onChange={this._onOperationChange}/>
+            <TextBox id="milestore" label="Milestore" value={this.state.milestone} onChange={this._onMilestoneChange}/>
+            <select id="operation" label="Operation" value={this.state.operation} onChange={this._onOperationChange}>
+                    <option value={OperationType[OperationType.TurnFeatureFlagOn]}>TurnFeatureFlagOn</option>
+                    <option value={OperationType[OperationType.TurnFeatureFlagOff]}>TurnFeatureFlagOff</option>
+                    <option value={OperationType[OperationType.RunSQLScript]}>RunSQLScript</option>
+            </select>
             <MultilineTextBox id="content" label="Content" value={this.state.content} onChange={this._onContentChange}/>
             <ButtonComponent cssClass="createButton" onClick={this._onCreateButtonClick} text="Create"/>
         </div>
@@ -160,25 +174,61 @@ export class AutoConfigTool extends React.Component<void, AutoConfigToolState> {
         this.setState({name: value} as AutoConfigToolState);
     };
     private _onScaleUnitChange = (value: string) => {
-        this.setState({scaleUnit: value} as AutoConfigToolState);
+        var stateClone = $.extend({}, this.state, {scaleUnit: value});
+        stateClone.content = this._populateContent(stateClone);
+        this.setState(stateClone);
     };
     private _onServiceChange = (value: string) => {
         this.setState({service: value} as AutoConfigToolState);
     };
     private _onMilestoneChange = (value: string) => {
-        this.setState({milestore: value} as AutoConfigToolState);
+        this.setState({milestone: value} as AutoConfigToolState);
     };
-    private _onOperationChange = (value: string) => {
-        this.setState({operation: value} as AutoConfigToolState);
+    private _onOperationChange = (event) => {
+        var stateClone = $.extend({}, this.state, {operation: event.target.value});
+        stateClone.content = this._populateContent(stateClone);
+        this.setState(stateClone);
     };
     private _onContentChange = (value: string) => {
-        this.setState({content: value} as AutoConfigToolState);
+        this.setState({content: value, contentCustomized: true } as any);
     };
     private _onCreateButtonClick = () => {
-        console.log(JSON.stringify(this.state));
-        var dataService = new DataService();
-        dataService.createPR(this.state.service, this.state.milestore, this.state.name);
+        this._dataService.createPR(this.state).then(pullRequest => {
+            window.top.location.href = `${pullRequest.repository.remoteUrl}/pullrequest/${pullRequest.pullRequestId}`
+        });
     };
+
+    private _populateContent(state: AutoConfigToolState): string {
+        if (state.contentCustomized) {
+            return undefined;
+        }
+        switch (state.operation) {
+            case OperationType[OperationType.TurnFeatureFlagOn]:
+                return `
+$ErrorActionPreference = "Stop"
+if ($pwd -like '*${state.scaleUnit}' -or $pwd -like '*\devfabric')
+{
+   Set-FeatureFlag -FeatureName <Your FeatureFlag Name> -State on
+}       
+
+`
+case OperationType[OperationType.TurnFeatureFlagOff]:
+                return `
+$ErrorActionPreference = "Stop"
+if ($pwd -like '*${state.scaleUnit}' -or $pwd -like '*\devfabric')
+{
+   Set-FeatureFlag -FeatureName <Your FeatureFlag Name> -State off
+}       
+
+`
+           case OperationType[OperationType.RunSQLScript]:
+                // TODO
+                break;
+        
+            default:
+                break;
+        }
+    }
 }
 
 ReactDOM.render(<AutoConfigTool />, document.getElementById("main-container"));

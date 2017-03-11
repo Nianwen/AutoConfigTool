@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "auto-config-tool",
-    "version": "0.2.16",
+    "version": "0.2.22",
     "name": "Auto Config Tool",
     "scopes": [
         "vso.code",
