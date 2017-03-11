@@ -194,7 +194,7 @@ export class AutoConfigTool extends React.Component<void, AutoConfigToolState> {
     };
     private _onCreateButtonClick = () => {
         this._dataService.createPR(this.state).then(pullRequest => {
-            window.top.location.href = `${pullRequest.repository.remoteUrl}/pullrequest/${pullRequest.pullRequestId}`
+            window.top.location.href = `${pullRequest.repository.remoteUrl}/pullrequest/${pullRequest.pullRequestId}?_a=files`
         });
     };
 
