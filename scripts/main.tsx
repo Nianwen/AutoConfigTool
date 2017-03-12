@@ -60,7 +60,6 @@ export class TextBox extends React.Component<ITextBoxComponentProps, ITextBoxSta
                 <label htmlFor={this.props.id}>{this.props.label}</label>
                 {this._renderInput()}
             </fieldset>
-            {errorMessage}
         </div>;
     }
 
@@ -84,14 +83,11 @@ export class MultilineTextBox extends React.Component<ITextBoxComponentProps, IT
     public static INPUT_ERROR_TIP_CLASS = "input-error-tip";
 
     public render(): JSX.Element {
-        let errorMessage: JSX.Element = (this.props.isValid == null) || this.props.isValid ? null : <div className={TextBox.INPUT_ERROR_TIP_CLASS} hidden={ this.props.isValid }>{ this.props.errorMessage }</div>;
-
         return <div className={this.props.className}>
             <fieldset style={this.props.style}>
                 <label htmlFor={this.props.id}>{this.props.label}</label>
                 {this._renderTextArea()}
             </fieldset>
-            {errorMessage}
         </div>;
     }
 
@@ -105,7 +101,7 @@ export class MultilineTextBox extends React.Component<ITextBoxComponentProps, IT
                 this.props.onChange(event.target.value);
             };
             var invalidClassName = this.props.isValid ? "" : TextBox.INVALID_CLASS;
-            return <textarea value={this.props.value} onChange={onChange} className={invalidClassName} placeholder={this.props.placeholderText} />
+            return <textarea value={this.props.value} onChange={onChange} className={invalidClassName} placeholder={this.props.placeholderText} rows={40} cols={80}/>
         }
     }
 } 
@@ -136,6 +132,7 @@ export interface AutoConfigToolState {
     service: string;
     milestone: string;
     operation: string;
+    featureflag: string;
     content: string;
     contentCustomized?: boolean;
 }
@@ -152,40 +149,79 @@ export class AutoConfigTool extends React.Component<void, AutoConfigToolState> {
     constructor() {
         super();
         this._dataService = new DataService();
-        this.state = { name:"", scaleUnit: "", service: "", milestone:"", operation: OperationType[OperationType.TurnFeatureFlagOn], content: ""};
+        this.state = { name:"", scaleUnit: "SU0", service: "tfs", milestone:"115", operation: OperationType[OperationType.TurnFeatureFlagOn], featureflag: "", content: ""};
     }
     public render(): JSX.Element {
-        return <div>
-            <TextBox id="name" label="Name" value={this.state.name} onChange={this._onNameChange}/>
-            <TextBox id="scaleUnit" label="ScaleUnit" value={this.state.scaleUnit} onChange={this._onScaleUnitChange}/>
-            <TextBox id="service" label="Service" value={this.state.service} onChange={this._onServiceChange}/>
-            <TextBox id="milestore" label="Milestore" value={this.state.milestone} onChange={this._onMilestoneChange}/>
-            <select id="operation" label="Operation" value={this.state.operation} onChange={this._onOperationChange}>
-                    <option value={OperationType[OperationType.TurnFeatureFlagOn]}>TurnFeatureFlagOn</option>
-                    <option value={OperationType[OperationType.TurnFeatureFlagOff]}>TurnFeatureFlagOff</option>
-                    <option value={OperationType[OperationType.RunSQLScript]}>RunSQLScript</option>
-            </select>
-            <MultilineTextBox id="content" label="Content" value={this.state.content} onChange={this._onContentChange}/>
-            <ButtonComponent cssClass="createButton" onClick={this._onCreateButtonClick} text="Create"/>
+        return <div className="bowtie">
+            <TextBox id="name" label="ConfigurationName" value={this.state.name} onChange={this._onNameChange} isValid={!!this.state.name}/>
+            <fieldset>
+                <label>ScaleUnit</label>
+                <select id="scaleUnit" label="ScaleUnit" value={this.state.scaleUnit} onChange={this._onScaleUnitChange}>
+                        <option value="SU0">SU0</option>
+                        <option value="SU1">SU1</option>
+                        <option value="SU2">SU2</option>
+                        <option value="SU3">SU3</option>
+                        <option value="SU4">SU4</option>
+                        <option value="SU5">SU5</option>
+                </select>
+            </fieldset>
+            <fieldset>
+                <label>ScaleUnit</label>
+                <select id="service" label="Service" value={this.state.scaleUnit} onChange={this._onServiceChange}>
+                        <option value="tfs">tfs</option>
+                        <option value="sps">sps</option>
+                        <option value="spsext">spsext</option>
+                        <option value="ems">ems</option>
+                        <option value="sh">sh</option>
+                        <option value="aex">cl</option>
+                        <option value="mps">mps</option>
+                        <option value="mms">mms</option>
+                        <option value="pe">pe</option>
+                </select>
+            </fieldset>
+            <fieldset>
+                <label>Milestone</label>
+                <select id="milestone" label="milestone" value={this.state.milestone} onChange={this._onMilestoneChange}>
+                        <option value="114">114</option>
+                        <option value="115">115</option>
+                        <option value="116">116</option>
+                </select>
+            </fieldset>
+            <fieldset>
+                <label>Operation</label>
+                <select id="operation" value={this.state.operation} onChange={this._onOperationChange}>
+                        <option value={OperationType[OperationType.TurnFeatureFlagOn]}>TurnFeatureFlagOn</option>
+                        <option value={OperationType[OperationType.TurnFeatureFlagOff]}>TurnFeatureFlagOff</option>
+                        <option value={OperationType[OperationType.RunSQLScript]}>RunSQLScript</option>
+                </select>
+            </fieldset>
+            {this._dynamicRender()}
+            <MultilineTextBox id="content" label="Preview" value={this.state.content} onChange={this._onContentChange} isValid={!!this.state.content}/>
+            <ButtonComponent cssClass="btn-cta" onClick={this._onCreateButtonClick} text="Create"/>
         </div>
         
     }
     private _onNameChange = (value: string) => {
         this.setState({name: value} as AutoConfigToolState);
     };
-    private _onScaleUnitChange = (value: string) => {
-        var stateClone = $.extend({}, this.state, {scaleUnit: value});
+    private _onScaleUnitChange = (event) => {
+        var stateClone = $.extend({}, this.state, {scaleUnit: event.target.value});
         stateClone.content = this._populateContent(stateClone);
         this.setState(stateClone);
     };
-    private _onServiceChange = (value: string) => {
-        this.setState({service: value} as AutoConfigToolState);
+    private _onServiceChange = (event) => {
+        this.setState({service: event.target.value} as AutoConfigToolState);
     };
-    private _onMilestoneChange = (value: string) => {
-        this.setState({milestone: value} as AutoConfigToolState);
+    private _onMilestoneChange = (event) => {
+        this.setState({milestone: event.target.value} as AutoConfigToolState);
     };
     private _onOperationChange = (event) => {
         var stateClone = $.extend({}, this.state, {operation: event.target.value});
+        stateClone.content = this._populateContent(stateClone);
+        this.setState(stateClone);
+    };
+    private _onFeatureFlagChange = (value: string) => {
+        var stateClone = $.extend({}, this.state, {featureflag: value});
         stateClone.content = this._populateContent(stateClone);
         this.setState(stateClone);
     };
@@ -197,7 +233,12 @@ export class AutoConfigTool extends React.Component<void, AutoConfigToolState> {
             window.top.location.href = `${pullRequest.repository.remoteUrl}/pullrequest/${pullRequest.pullRequestId}?_a=files`
         });
     };
-
+    private _dynamicRender(): JSX.Element {
+        if (this.state.operation === OperationType[OperationType.TurnFeatureFlagOn] || this.state.operation === OperationType[OperationType.TurnFeatureFlagOff]) {
+            return <TextBox id="featureflag" label="FeatureFlagName" value={this.state.featureflag} onChange={this._onFeatureFlagChange} isValid={!!this.state.featureflag}/>;
+        }
+        return null;
+    }
     private _populateContent(state: AutoConfigToolState): string {
         if (state.contentCustomized) {
             return undefined;
@@ -208,23 +249,21 @@ export class AutoConfigTool extends React.Component<void, AutoConfigToolState> {
 $ErrorActionPreference = "Stop"
 if ($pwd -like '*${state.scaleUnit}' -or $pwd -like '*\devfabric')
 {
-   Set-FeatureFlag -FeatureName <Your FeatureFlag Name> -State on
+   Set-FeatureFlag -FeatureName '${state.featureflag}' -State on
 }       
 
-`
+`;
 case OperationType[OperationType.TurnFeatureFlagOff]:
                 return `
 $ErrorActionPreference = "Stop"
 if ($pwd -like '*${state.scaleUnit}' -or $pwd -like '*\devfabric')
 {
-   Set-FeatureFlag -FeatureName <Your FeatureFlag Name> -State off
+   Set-FeatureFlag -FeatureName '${state.featureflag}' -State off
 }       
 
-`
+`;
            case OperationType[OperationType.RunSQLScript]:
-                // TODO
-                break;
-        
+                return "TODO ;)";
             default:
                 break;
         }

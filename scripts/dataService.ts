@@ -21,16 +21,12 @@ export class DataService {
         this._webContext = this._getWebContext();
     }
 
-    public getRepositories() {
-        
-    }
-
     public createPR(data: IGitData): IPromise<VCContracts.GitPullRequest> {
         const sourceRefName = "refs/heads/master";
         const repositoryName = data.repoName || "VSO.ConfigChange"
         return this._createBranch(data, repositoryName).then(push => {
                return this._gitClient.createPullRequest({
-                    "sourceRefName": `refs/heads/${data.name}`,
+                    "sourceRefName": `refs/heads/${data.name.replace(/ /g, '')}`,
                     "targetRefName": "refs/heads/master",
                     "title": data.name,
                     "description": "",
@@ -45,7 +41,7 @@ export class DataService {
                 return this._gitClient.createPush(
                     {
                     "refUpdates": [{
-                        "name": `refs/heads/${data.name}`,
+                        "name": `refs/heads/${data.name.replace(/ /g, '')}`,
                         "oldObjectId": refs[0].objectId
                     }],
                     "commits": [
@@ -55,7 +51,7 @@ export class DataService {
                             {
                             "changeType": "add",
                             "item": {
-                                "path": `/${data.service}/${data.milestone}/${data.name}/${data.name}.ps1`
+                                "path": `/${data.service}/${data.milestone}/${data.name.replace(/ /g, '')}/${data.name.replace(/ /g, '')}.ps1`
                             },
                             "newContent": {
                                 "content": data.content,

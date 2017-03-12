@@ -1,0 +1,47 @@
+div#main-container {
+    margin-left: 18px;
+    height: 514px;
+}
+
+div#main-container .bowtie {
+    overflow-y: auto;
+    height: 100%;
+}
+
+fieldset {
+    width: 400px;
+    margin-top: 6px !important;
+}
+
+.bowtie textarea {
+    height: 170px !important;
+}
+
+.btn-cta {
+    margin-top: 10px;
+}
+
+.bowtie select {
+  background-color: #ffffff;
+  border: 1px solid #dadada;
+  padding: 0 8px;
+  width: 100%;
+  height: 32px;
+}
+
+.bowtie select:hover {
+  border-color: #a6a6a6;
+}
+
+.bowtie select:active {
+  border-color: #0078d7;
+}
+
+.bowtie select:focus {
+  border-color: #0078d7;
+}
+
+.bowtie select ~ label,  {
+  margin-top: 24px;
+}
+
